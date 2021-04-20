@@ -1,0 +1,5 @@
+# Ignore Mathematica notebook files.
+*.nb
+
+# Ignore the export dir.
+export/
