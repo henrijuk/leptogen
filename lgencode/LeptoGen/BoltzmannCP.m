@@ -13,7 +13,8 @@ Begin["`BoltzmannCP`"];
 \[Epsilon][m_, \[CapitalGamma]_, \[Theta]_, settings_] := Switch[settings@"BoltzmannCPAsymmetry",
 	"Mixed", \[Epsilon]MixRegulator[m, \[CapitalGamma], \[Theta]],
 	"Difference", \[Epsilon]DiffRegulator[m, \[CapitalGamma], \[Theta]],
-	"Sum", \[Epsilon]SumRegulator[m, \[CapitalGamma], \[Theta]]
+	"Sum", \[Epsilon]SumRegulator[m, \[CapitalGamma], \[Theta]],
+	"EffectiveSum", \[Epsilon]EffSumRegulator[m, \[CapitalGamma], \[Theta]]
 ];
 
 
@@ -46,6 +47,17 @@ Begin["`BoltzmannCP`"];
 	);
 	\[Epsilon][2] = Sin[2*\[Theta][1,2]]*(m[2]^2 - m[1]^2)*m[2]*\[CapitalGamma][1]/(
 		(m[2]^2 - m[1]^2)^2 + (m[2]*\[CapitalGamma][2] + m[1]*\[CapitalGamma][1])^2
+	);
+	\[Epsilon]
+];
+
+(* From [arXiv:1711.02863]. *)
+\[Epsilon]EffSumRegulator[m_, \[CapitalGamma]_, \[Theta]_] := Module[{\[Epsilon]},
+	\[Epsilon][1] = Sin[2*\[Theta][1,2]]*(m[2]^2 - m[1]^2)*m[1]*\[CapitalGamma][2]/(
+		(m[2]^2 - m[1]^2)^2 + (m[2]*\[CapitalGamma][2] + m[1]*\[CapitalGamma][1])^2*Sin[\[Theta][1,2]]^2
+	);
+	\[Epsilon][2] = Sin[2*\[Theta][1,2]]*(m[2]^2 - m[1]^2)*m[2]*\[CapitalGamma][1]/(
+		(m[2]^2 - m[1]^2)^2 + (m[2]*\[CapitalGamma][2] + m[1]*\[CapitalGamma][1])^2*Sin[\[Theta][1,2]]^2
 	);
 	\[Epsilon]
 ];

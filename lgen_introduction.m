@@ -5,7 +5,7 @@
 
 
 (* ::Text:: *)
-(*Start by running this file (by using "Evaluation -> Evaluate notebook" or "Run All Code"  in the Mathematica front end).*)
+(*Start by running this file (by using "Evaluation -> Evaluate notebook" or "Run All Code" in the Mathematica front end).*)
 
 
 (* ::Subsection:: *)
@@ -38,7 +38,7 @@ Get["lgencode/LeptoGen/LeptoGenTools.wl"];
 
 
 (* ::Text:: *)
-(*The main package uses self-energy interpolation functions. The data for these is either loaded from a pre-calculated cache (with "SelfEnergyRecalculate" -> False), or calculated from scratch and saved to a cache (with "SelfEnergyRecalculate" -> True). In both cases the name of the cache directory is specified with the option "SelfEnergyCacheName". The option "SelfEnergyInterpSettings" is used to specify options for the interpolations (which use the built-in Interpolation function). The last three options shown here are used to specify the amount of Mathematica's parallel kernels  (used only when recalculating the cache) and the lz = log10(z) and ly = log10(k/T) grids.*)
+(*The main package uses self-energy interpolation functions. The data for these is either loaded from a pre-calculated cache (with "SelfEnergyRecalculate" -> False), or calculated from scratch and saved to a cache (with "SelfEnergyRecalculate" -> True). In both cases the name of the cache directory is specified with the option "SelfEnergyCacheName". The option "SelfEnergyInterpSettings" is used to specify options for the interpolations (which use the built-in Interpolation function). The last three options shown here are used to specify the amount of Mathematica's parallel kernels (used only when recalculating the cache) and the lz = log10(z) and ly = log10(k/T) grids.*)
 
 
 init = LeptoGen`InitialSetup[
@@ -71,6 +71,7 @@ data = LeptoGenTools`SolveAll[init,
 	"LeptonDEUseNeutrinoGrid" -> False,
 	"BoltzmannDiscardBackreaction" -> True,
 	"BoltzmannCPAsymmetry" -> "Mixed",
+	"BoltzmannAttractorApprox" -> False,
 	"OnlyPrecalc" -> False
 ];
 Util`Toc[];

@@ -35,6 +35,7 @@ data = LeptoGenTools`SolveAll[init,
 	"LeptonDEUseNeutrinoGrid" -> False,
 	"BoltzmannDiscardBackreaction" -> True,
 	"BoltzmannCPAsymmetry" -> "Mixed",
+	"BoltzmannAttractorApprox" -> False,
 	"OnlyPrecalc" -> False
 ];
 Util`Toc[];

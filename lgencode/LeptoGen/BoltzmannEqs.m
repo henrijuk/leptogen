@@ -105,10 +105,14 @@ NeutrinoEqSolve[grid_, precalc_, settings_] := Module[
 	source = lzinterp[-s*precalc@"Dfeq"];
 	initial = precalc@"\[Delta]fInitialValue";
 	
-	\[Delta]fsol = NDSolveValue[
-		{\[Delta]f'[lz] == lincoeff[lz]*\[Delta]f[lz] + source[lz], \[Delta]f[Min@lzc] == initial},
-		\[Delta]f, {lz, Min@lzc, Max@lzc},
-		settings@"NeutrinoDESettings", WorkingPrecision -> MachinePrecision
+	\[Delta]fsol = If[settings@"BoltzmannAttractorApprox",
+		lzinterp[-precalc@"Dfeq"/precalc@"Coll"],
+		(* else: *)
+		NDSolveValue[
+			{\[Delta]f'[lz] == lincoeff[lz]*\[Delta]f[lz] + source[lz], \[Delta]f[Min@lzc] == initial},
+			\[Delta]f, {lz, Min@lzc, Max@lzc},
+			settings@"NeutrinoDESettings", WorkingPrecision -> MachinePrecision
+		]
 	];
 	
 	(* Output interpolation functions. *)

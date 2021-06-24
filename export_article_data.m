@@ -7,7 +7,7 @@
 (*
 Calculates and exports ALL numerical data used in the article
     "Flavour mixing transport theory and resonant leptogenesis",
-    H. Jukkala, K. Kainulainen, P. M. Rahkila, (2021).
+    H. Jukkala, K. Kainulainen, P. M. Rahkila (2021).
 Can be run in the Mathematica front end (use "Run All Code" or "Evaluation -> Evaluate Notebook").
 Warning: can take a long time to run (e.g. ~1 hour on a quad-core workstation with 16 GB memory).
 *)
@@ -56,6 +56,7 @@ Util`Toc[];
 
 Util`Tic["fixed mass diff. calculations"];
 
+
 (* Benchmark parameters (Y1 = 0.06). Vacuum initial conditions. *)
 data["benchmark, vacuum"] = LeptoGenTools`SolveAll[init,
 	0.06, 0.1, \[Pi]/4., 1.*^13, (0.06^2 + 0.1^2)/(16\[Pi]), {-2., 2., 200}, {-2., 4., 100},
@@ -82,11 +83,13 @@ data["Y1=0.01, thermal"] = LeptoGenTools`SolveAll[init,
 	"LeptonDEUseNeutrinoGrid" -> True
 ];
 
+
 (* Benchmark parameters (Y1 = 0.06). Vacuum initial conditions. Very large grid. *)
 data["benchmark, vacuum, large"] = LeptoGenTools`SolveAll[init,
 	0.06, 0.1, \[Pi]/4., 1.*^13, (0.06^2 + 0.1^2)/(16\[Pi]), {-2., 2., 300}, {-2., 4., 450},
 	"LeptonDEUseNeutrinoGrid" -> True
 ];
+
 
 (* Mass diff. parameter \[CapitalDelta]x2 = 0.02 and Y1 = 0.06. Vacuum initial conditions. Large grid. *)
 data["\[CapitalDelta]x2 = 0.02, vacuum, large"] = LeptoGenTools`SolveAll[init,
@@ -94,6 +97,7 @@ data["\[CapitalDelta]x2 = 0.02, vacuum, large"] = LeptoGenTools`SolveAll[init,
 	"BoltzmannCPAsymmetry" -> "Sum",
 	"LeptonDEUseNeutrinoGrid" -> True
 ];
+
 
 (* Benchmark parameters (Y1 = 0.06). Vacuum initial conditions. Sum regulator for Boltzmann. *)
 data["benchmark, vacuum, BE-Sum"] = LeptoGenTools`SolveAll[init,
@@ -116,6 +120,22 @@ data["benchmark, vacuum, decoupling"] = LeptoGenTools`SolveAll[init,
 	"LeptonDEUseNeutrinoGrid" -> True
 ];
 
+
+(* Y1 = 0.01, Y2 = 0.02. Vacuum initial conditions. Sum regulator for Boltzmann. *)
+data["Y1=0.01, Y2=0.02, vacuum, BE-Sum"] = LeptoGenTools`SolveAll[init,
+	0.01, 0.02, \[Pi]/4., 1.*^13, (0.01^2 + 0.02^2)/(16\[Pi]), {-2., 2., 200}, {-2., 4., 100},
+	"BoltzmannCPAsymmetry" -> "Sum",
+	"LeptonDEUseNeutrinoGrid" -> True
+];
+
+(* Y1 = 0.01, Y2 = 0.02. Vacuum initial conditions. Effective sum regulator for Boltzmann. *)
+data["Y1=0.01, Y2=0.02, vacuum, BE-EffSum"] = LeptoGenTools`SolveAll[init,
+	0.01, 0.02, \[Pi]/4., 1.*^13, (0.01^2 + 0.02^2)/(16\[Pi]), {-2., 2., 200}, {-2., 4., 100},
+	"BoltzmannCPAsymmetry" -> "EffectiveSum",
+	"LeptonDEUseNeutrinoGrid" -> True
+];
+
+
 Util`Toc[];
 
 
@@ -136,7 +156,6 @@ data["varying \[CapitalDelta]x2, Y1=0.01"] = Module[{f, \[CapitalDelta]x2vec},
 		"LeptonDEUseNeutrinoGrid" -> True
 	]["Info"] &;
 	\[CapitalDelta]x2vec = 10^Subdivide[Log10[1.*^-7], Log10[1.*^-2], 30 - 1];
-	
 	f /@ \[CapitalDelta]x2vec
 ];
 
@@ -149,7 +168,6 @@ data["varying \[CapitalDelta]x2, Y1=0.01, BE-Mixed"] = Module[{f, \[CapitalDelta
 		"LeptonDEUseNeutrinoGrid" -> True
 	]["Info"] &;
 	\[CapitalDelta]x2vec = 10^Subdivide[Log10[1.*^-7], Log10[1.*^-2], 30 - 1];
-	
 	f /@ \[CapitalDelta]x2vec
 ];
 
@@ -162,7 +180,6 @@ data["varying \[CapitalDelta]x2, Y1=0.01, BE-Difference"] = Module[{f, \[Capital
 		"LeptonDEUseNeutrinoGrid" -> True
 	]["Info"] &;
 	\[CapitalDelta]x2vec = 10^Subdivide[Log10[1.*^-7], Log10[1.*^-2], 30 - 1];
-	
 	f /@ \[CapitalDelta]x2vec
 ];
 
@@ -175,7 +192,18 @@ data["varying \[CapitalDelta]x2, Y1=0.01, BE-Sum"] = Module[{f, \[CapitalDelta]x
 		"LeptonDEUseNeutrinoGrid" -> True
 	]["Info"] &;
 	\[CapitalDelta]x2vec = 10^Subdivide[Log10[1.*^-7], Log10[1.*^-2], 30 - 1];
-	
+	f /@ \[CapitalDelta]x2vec
+];
+
+(* Boltzmann only with the effective sum regulator. *)
+data["varying \[CapitalDelta]x2, Y1=0.01, BE-EffSum"] = Module[{f, \[CapitalDelta]x2vec},
+	f = LeptoGenTools`SolveAll[init,
+		0.01, 0.1, \[Pi]/4., 1.*^13, #, {-2., 2., 200}, {-2., 4., 100},
+		"BoltzmannCPAsymmetry" -> "EffectiveSum",
+		"OnlyBE" -> True,
+		"LeptonDEUseNeutrinoGrid" -> True
+	]["Info"] &;
+	\[CapitalDelta]x2vec = 10^Subdivide[Log10[1.*^-7], Log10[1.*^-2], 30 - 1];
 	f /@ \[CapitalDelta]x2vec
 ];
 
@@ -195,7 +223,6 @@ data["varying \[CapitalDelta]x2, Y1=0.06"] = Module[{f, \[CapitalDelta]x2vec},
 		"LeptonDEUseNeutrinoGrid" -> True
 	]["Info"] &;
 	\[CapitalDelta]x2vec = 10^Subdivide[Log10[1.*^-7], Log10[1.*^-2], 30 - 1];
-	
 	f /@ \[CapitalDelta]x2vec
 ];
 
@@ -208,7 +235,6 @@ data["varying \[CapitalDelta]x2, Y1=0.06, BE-Mixed"] = Module[{f, \[CapitalDelta
 		"LeptonDEUseNeutrinoGrid" -> True
 	]["Info"] &;
 	\[CapitalDelta]x2vec = 10^Subdivide[Log10[1.*^-7], Log10[1.*^-2], 30 - 1];
-	
 	f /@ \[CapitalDelta]x2vec
 ];
 
@@ -221,7 +247,6 @@ data["varying \[CapitalDelta]x2, Y1=0.06, BE-Difference"] = Module[{f, \[Capital
 		"LeptonDEUseNeutrinoGrid" -> True
 	]["Info"] &;
 	\[CapitalDelta]x2vec = 10^Subdivide[Log10[1.*^-7], Log10[1.*^-2], 30 - 1];
-	
 	f /@ \[CapitalDelta]x2vec
 ];
 
@@ -234,7 +259,18 @@ data["varying \[CapitalDelta]x2, Y1=0.06, BE-Sum"] = Module[{f, \[CapitalDelta]x
 		"LeptonDEUseNeutrinoGrid" -> True
 	]["Info"] &;
 	\[CapitalDelta]x2vec = 10^Subdivide[Log10[1.*^-7], Log10[1.*^-2], 30 - 1];
-	
+	f /@ \[CapitalDelta]x2vec
+];
+
+(* Boltzmann only with the effective sum regulator. *)
+data["varying \[CapitalDelta]x2, Y1=0.06, BE-EffSum"] = Module[{f, \[CapitalDelta]x2vec},
+	f = LeptoGenTools`SolveAll[init,
+		0.06, 0.1, \[Pi]/4., 1.*^13, #, {-2., 2., 200}, {-2., 4., 100},
+		"BoltzmannCPAsymmetry" -> "EffectiveSum",
+		"OnlyBE" -> True,
+		"LeptonDEUseNeutrinoGrid" -> True
+	]["Info"] &;
+	\[CapitalDelta]x2vec = 10^Subdivide[Log10[1.*^-7], Log10[1.*^-2], 30 - 1];
 	f /@ \[CapitalDelta]x2vec
 ];
 
@@ -254,7 +290,6 @@ data["varying \[CapitalDelta]x2, Y1=0.09"] = Module[{f, \[CapitalDelta]x2vec},
 		"LeptonDEUseNeutrinoGrid" -> True
 	]["Info"] &;
 	\[CapitalDelta]x2vec = 10^Subdivide[Log10[1.*^-7], Log10[1.*^-2], 30 - 1];
-	
 	f /@ \[CapitalDelta]x2vec
 ];
 
@@ -267,7 +302,6 @@ data["varying \[CapitalDelta]x2, Y1=0.09, BE-Mixed"] = Module[{f, \[CapitalDelta
 		"LeptonDEUseNeutrinoGrid" -> True
 	]["Info"] &;
 	\[CapitalDelta]x2vec = 10^Subdivide[Log10[1.*^-7], Log10[1.*^-2], 30 - 1];
-	
 	f /@ \[CapitalDelta]x2vec
 ];
 
@@ -280,7 +314,6 @@ data["varying \[CapitalDelta]x2, Y1=0.09, BE-Difference"] = Module[{f, \[Capital
 		"LeptonDEUseNeutrinoGrid" -> True
 	]["Info"] &;
 	\[CapitalDelta]x2vec = 10^Subdivide[Log10[1.*^-7], Log10[1.*^-2], 30 - 1];
-	
 	f /@ \[CapitalDelta]x2vec
 ];
 
@@ -293,7 +326,86 @@ data["varying \[CapitalDelta]x2, Y1=0.09, BE-Sum"] = Module[{f, \[CapitalDelta]x
 		"LeptonDEUseNeutrinoGrid" -> True
 	]["Info"] &;
 	\[CapitalDelta]x2vec = 10^Subdivide[Log10[1.*^-7], Log10[1.*^-2], 30 - 1];
-	
+	f /@ \[CapitalDelta]x2vec
+];
+
+(* Boltzmann only with the effective sum regulator. *)
+data["varying \[CapitalDelta]x2, Y1=0.09, BE-EffSum"] = Module[{f, \[CapitalDelta]x2vec},
+	f = LeptoGenTools`SolveAll[init,
+		0.09, 0.1, \[Pi]/4., 1.*^13, #, {-2., 2., 200}, {-2., 4., 100},
+		"BoltzmannCPAsymmetry" -> "EffectiveSum",
+		"OnlyBE" -> True,
+		"LeptonDEUseNeutrinoGrid" -> True
+	]["Info"] &;
+	\[CapitalDelta]x2vec = 10^Subdivide[Log10[1.*^-7], Log10[1.*^-2], 30 - 1];
+	f /@ \[CapitalDelta]x2vec
+];
+
+Util`Toc[];
+
+
+(* ::Text:: *)
+(*Fourth set*)
+
+
+Util`Tic["varying mass diff. calculations 4"];
+
+(* Varying mass difference, with Y1 = 0.01, Y2 = 0.02. Vacuum initial conditions. *)
+(* Note that we use a lower \[CapitalDelta]m^2 range here. *)
+data["varying \[CapitalDelta]x2, Y1=0.01, Y2=0.02"] = Module[{f, \[CapitalDelta]x2vec},
+	f = LeptoGenTools`SolveAll[init,
+		0.01, 0.02, \[Pi]/4., 1.*^13, #, {-2., 2., 200}, {-2., 4., 100},
+		"LeptonDEUseNeutrinoGrid" -> True
+	]["Info"] &;
+	\[CapitalDelta]x2vec = 10^Subdivide[Log10[1.*^-7], Log10[1.*^-3], 30 - 1]; (* lower range *)
+	f /@ \[CapitalDelta]x2vec
+];
+
+(* Boltzmann only with mixed regulator. *)
+data["varying \[CapitalDelta]x2, Y1=0.01, Y2=0.02, BE-Mixed"] = Module[{f, \[CapitalDelta]x2vec},
+	f = LeptoGenTools`SolveAll[init,
+		0.01, 0.02, \[Pi]/4., 1.*^13, #, {-2., 2., 200}, {-2., 4., 100},
+		"BoltzmannCPAsymmetry" -> "Mixed",
+		"OnlyBE" -> True,
+		"LeptonDEUseNeutrinoGrid" -> True
+	]["Info"] &;
+	\[CapitalDelta]x2vec = 10^Subdivide[Log10[1.*^-7], Log10[1.*^-2], 30 - 1];
+	f /@ \[CapitalDelta]x2vec
+];
+
+(* Boltzmann only with difference regulator. *)
+data["varying \[CapitalDelta]x2, Y1=0.01, Y2=0.02, BE-Difference"] = Module[{f, \[CapitalDelta]x2vec},
+	f = LeptoGenTools`SolveAll[init,
+		0.01, 0.02, \[Pi]/4., 1.*^13, #, {-2., 2., 200}, {-2., 4., 100},
+		"BoltzmannCPAsymmetry" -> "Difference",
+		"OnlyBE" -> True,
+		"LeptonDEUseNeutrinoGrid" -> True
+	]["Info"] &;
+	\[CapitalDelta]x2vec = 10^Subdivide[Log10[1.*^-7], Log10[1.*^-2], 30 - 1];
+	f /@ \[CapitalDelta]x2vec
+];
+
+(* Boltzmann only with sum regulator. *)
+data["varying \[CapitalDelta]x2, Y1=0.01, Y2=0.02, BE-Sum"] = Module[{f, \[CapitalDelta]x2vec},
+	f = LeptoGenTools`SolveAll[init,
+		0.01, 0.02, \[Pi]/4., 1.*^13, #, {-2., 2., 200}, {-2., 4., 100},
+		"BoltzmannCPAsymmetry" -> "Sum",
+		"OnlyBE" -> True,
+		"LeptonDEUseNeutrinoGrid" -> True
+	]["Info"] &;
+	\[CapitalDelta]x2vec = 10^Subdivide[Log10[1.*^-7], Log10[1.*^-2], 30 - 1];
+	f /@ \[CapitalDelta]x2vec
+];
+
+(* Boltzmann only with the effective sum regulator. *)
+data["varying \[CapitalDelta]x2, Y1=0.01, Y2=0.02, BE-EffSum"] = Module[{f, \[CapitalDelta]x2vec},
+	f = LeptoGenTools`SolveAll[init,
+		0.01, 0.02, \[Pi]/4., 1.*^13, #, {-2., 2., 200}, {-2., 4., 100},
+		"BoltzmannCPAsymmetry" -> "EffectiveSum",
+		"OnlyBE" -> True,
+		"LeptonDEUseNeutrinoGrid" -> True
+	]["Info"] &;
+	\[CapitalDelta]x2vec = 10^Subdivide[Log10[1.*^-7], Log10[1.*^-2], 30 - 1];
 	f /@ \[CapitalDelta]x2vec
 ];
 
@@ -337,6 +449,8 @@ exportYLz[data["benchmark, vacuum"], "_benchmark"];
 exportYLz[data["benchmark, thermal"], "_benchmark_thermal"];
 exportYLz[data["Y1=0.01, vacuum"], "_with_Y1_001"];
 exportYLz[data["Y1=0.01, thermal"], "_with_Y1_001_thermal"];
+exportYLz[data["Y1=0.01, Y2=0.02, vacuum, BE-Sum"], "_with_Y1_001_Y2_002_Sum"];
+exportYLz[data["Y1=0.01, Y2=0.02, vacuum, BE-EffSum"], "_with_Y1_001_Y2_002_EffSum"];
 
 
 (* ::Subsubsection:: *)
@@ -430,15 +544,23 @@ exportFinalYLMassDiff[data_, str_String, onlyBE:(_?BooleanQ):False] := Module[
 exportFinalYLMassDiff[data["varying \[CapitalDelta]x2, Y1=0.01"], "_with_Y1_001"];
 exportFinalYLMassDiff[data["varying \[CapitalDelta]x2, Y1=0.06"], "_with_Y1_006"];
 exportFinalYLMassDiff[data["varying \[CapitalDelta]x2, Y1=0.09"], "_with_Y1_009"];
+exportFinalYLMassDiff[data["varying \[CapitalDelta]x2, Y1=0.01, Y2=0.02"], "_with_Y1_001_Y2_002"];
 exportFinalYLMassDiff[data["varying \[CapitalDelta]x2, Y1=0.01, BE-Mixed"], "_with_Y1_001_Mix", True];
 exportFinalYLMassDiff[data["varying \[CapitalDelta]x2, Y1=0.06, BE-Mixed"], "_with_Y1_006_Mix", True];
 exportFinalYLMassDiff[data["varying \[CapitalDelta]x2, Y1=0.09, BE-Mixed"], "_with_Y1_009_Mix", True];
+exportFinalYLMassDiff[data["varying \[CapitalDelta]x2, Y1=0.01, Y2=0.02, BE-Mixed"], "_with_Y1_001_Y2_002_Mix", True];
 exportFinalYLMassDiff[data["varying \[CapitalDelta]x2, Y1=0.01, BE-Difference"], "_with_Y1_001_Diff", True];
 exportFinalYLMassDiff[data["varying \[CapitalDelta]x2, Y1=0.06, BE-Difference"], "_with_Y1_006_Diff", True];
 exportFinalYLMassDiff[data["varying \[CapitalDelta]x2, Y1=0.09, BE-Difference"], "_with_Y1_009_Diff", True];
+exportFinalYLMassDiff[data["varying \[CapitalDelta]x2, Y1=0.01, Y2=0.02, BE-Difference"], "_with_Y1_001_Y2_002_Diff", True];
 exportFinalYLMassDiff[data["varying \[CapitalDelta]x2, Y1=0.01, BE-Sum"], "_with_Y1_001_Sum", True];
 exportFinalYLMassDiff[data["varying \[CapitalDelta]x2, Y1=0.06, BE-Sum"], "_with_Y1_006_Sum", True];
 exportFinalYLMassDiff[data["varying \[CapitalDelta]x2, Y1=0.09, BE-Sum"], "_with_Y1_009_Sum", True];
+exportFinalYLMassDiff[data["varying \[CapitalDelta]x2, Y1=0.01, Y2=0.02, BE-Sum"], "_with_Y1_001_Y2_002_Sum", True];
+exportFinalYLMassDiff[data["varying \[CapitalDelta]x2, Y1=0.01, BE-EffSum"], "_with_Y1_001_EffSum", True];
+exportFinalYLMassDiff[data["varying \[CapitalDelta]x2, Y1=0.06, BE-EffSum"], "_with_Y1_006_EffSum", True];
+exportFinalYLMassDiff[data["varying \[CapitalDelta]x2, Y1=0.09, BE-EffSum"], "_with_Y1_009_EffSum", True];
+exportFinalYLMassDiff[data["varying \[CapitalDelta]x2, Y1=0.01, Y2=0.02, BE-EffSum"], "_with_Y1_001_Y2_002_EffSum", True];
 
 
 (* ::Subsubsection:: *)
@@ -446,7 +568,7 @@ exportFinalYLMassDiff[data["varying \[CapitalDelta]x2, Y1=0.09, BE-Sum"], "_with
 
 
 exportOscillation[data_, str_String] := Module[
-	{path = exportDirName<>"/p5data/", lyidx, ly, lzc, lzcGrid, \[Delta]f, SCPk, SCP, SCPBE},
+	{path = exportDirName<>"/p5data/", lyidx, ly, lzc, lzcGrid, \[Delta]f, SCPk, SCP, SCPBE, SCPBEk},
 	
 	lyidx = LeptoGenTools`NearestLyIndex[data["Grid"]][Log10[3.]];
 	ly = data["Grid"]["lyCoords"][[lyidx]];
@@ -457,6 +579,7 @@ exportOscillation[data_, str_String] := Module[
 	SCPk = data["FullLepton"]["SCPdata"][[lyidx, All]];
 	SCP = data["FullLepton"]["SCP"][lzcGrid];
 	SCPBE = data["BELepton"]["SCP"][lzcGrid];
+	SCPBEk = data["BELepton"]["SCPData"][[lyidx, All]];
 	
 	(* We remove the log(10)*z scaling for SCP here. We also need to remove the log(10)*k scaling, and we also opt
 	   to factor out the k^2/(2\[Pi]^2) scaling (from d^3k/(2\[Pi])^3) of the SCP integrand *)
@@ -464,9 +587,10 @@ exportOscillation[data_, str_String] := Module[
 	export[path<>"SCP_k_mode_3_vs_z"<>str<>".txt", Transpose@{10^lzc, SCPk/(Log[10]*10^lzc*Log[10]*(10^ly)^3/(2*\[Pi]^2))}];
 	export[path<>"SCP_vs_z"<>str<>".txt", Transpose@{10^lzcGrid, SCP/(Log[10]*10^lzcGrid)}];
 	export[path<>"SCPBE_vs_z"<>str<>".txt", Transpose@{10^lzcGrid, SCPBE/(Log[10]*10^lzcGrid)}];
+	export[path<>"SCPBE_k_mode_3_vs_z"<>str<>".txt", Transpose@{10^lzcGrid, SCPBEk/(Log[10]*10^lzcGrid*Log[10]*(10^ly)^3/(2*\[Pi]^2))}];
 ];
 
-exportOscillation[data["\[CapitalDelta]x2 = 0.02, vacuum, large"], "_with_large_massdiff"]
+exportOscillation[data["\[CapitalDelta]x2 = 0.02, vacuum, large"], "_with_large_massdiff"];
 
 
 (* ::Subsubsection:: *)
@@ -501,10 +625,10 @@ exportApproxComp[data_, str_String, onlyBE:(_?BooleanQ):False] := Module[
 	
 ];
 
-exportApproxComp[data["benchmark, vacuum, BE-Sum"], "_benchmark"]
-exportApproxComp[data["benchmark, vacuum, hEvenOnly"], "_benchmark_hEvenOnly"]
-exportApproxComp[data["benchmark, vacuum, decoupling"], "_benchmark_decoupling"]
-exportApproxComp[data["benchmark, vacuum, BE-Sum"], "_benchmark_Sum", True]
+exportApproxComp[data["benchmark, vacuum, BE-Sum"], "_benchmark"];
+exportApproxComp[data["benchmark, vacuum, hEvenOnly"], "_benchmark_hEvenOnly"];
+exportApproxComp[data["benchmark, vacuum, decoupling"], "_benchmark_decoupling"];
+exportApproxComp[data["benchmark, vacuum, BE-Sum"], "_benchmark_Sum", True];
 
 
 (* ::Subsection:: *)

@@ -8,12 +8,12 @@
 
 (* Title: LeptoGen *)
 (* Summary: Functions for solving neutrino \[Delta]f and the lepton asymmetry. *)
-(* Package Version: 1.0 *)
+(* Package Version: 1.1 *)
 (* Mathematica Version: 12.0 *)
 (* Author: Henri Jukkala *)
 (* For copyright and license information see included LICENSE.txt *)
 
-(* Last changed 20. Apr 2021 *)
+(* Last changed 22. Jun 2021 *)
 
 (* Note: this program assumes the default option (Heads -> False) for Map, Apply, Cases and Replace. *)
 
@@ -261,7 +261,8 @@ Options[ControlSettings] = {
 	"BoltzmannDESettings" -> {AccuracyGoal -> 20, PrecisionGoal -> 12, InterpolationOrder -> All,
 		StartingStepSize -> 1.*^-4, MaxStepSize -> 0.01},
 	"BoltzmannDiscardBackreaction" -> True (* removes lepton BR-term in neutrino rate eq. *),
-	"BoltzmannCPAsymmetry" -> "Mixed" (* specifies the regulator for Boltzmann CP-asymmetry *)
+	"BoltzmannCPAsymmetry" -> "Mixed" (* specifies the regulator for Boltzmann CP-asymmetry *),
+	"BoltzmannAttractorApprox" -> False (* True: uses the late time limit for \[Delta]f_i *)
 };
 
 
