@@ -1,4 +1,4 @@
-LeptoGen
+LeptoGen [![DOI](https://zenodo.org/badge/359795244.svg)](https://zenodo.org/badge/latestdoi/359795244)
 ========
 
 LeptoGen is a software package for numerically solving (resonant) leptogenesis equations including
@@ -8,14 +8,14 @@ Language and can be run in the Mathematica front end. (Tested in Mathematica 12.
 Installation
 ------------
 
-The package can be loaded by running the code
+The package is portable and can be loaded by running the code
 
 	SetDirectory@NotebookDirectory[];
 	Get["lgencode/LeptoGen/LeptoGen.wl"];
 	Get["lgencode/LeptoGen/LeptoGenTools.wl"];
 
-in a Mathematica notebook (make sure the notebook is saved in the same directory as `lgencode`
-and `selfenergycache`).
+in a Mathematica notebook. (Just make sure the notebook is saved in the same directory as `lgencode`
+and `selfenergycache`.)
 
 Introduction and examples
 -------------------------
@@ -33,8 +33,10 @@ them.)
 Referencing
 -----------
 
-If you use this package, please cite the article "Flavour mixing transport theory and resonant
-leptogenesis", H. Jukkala, K. Kainulainen, P. M. Rahkila (2021),
-[arXiv:2104.03998 [hep-ph]](https://arxiv.org/abs/2104.03998).
+If you use this package, please cite the article
+
+- H. Jukkala, K. Kainulainen and P. M. Rahkila,
+  [J. High Energ. Phys. 2021, 119 (2021)](https://doi.org/10.1007/JHEP09(2021)119);
+  ([arXiv:2104.03998 [hep-ph]](https://arxiv.org/abs/2104.03998)).
 
 The data used in the article can be reproduced by running the code `export_article_data.m`.
